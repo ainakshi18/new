@@ -1,0 +1,46 @@
+CHIT 8
+
+DELIMITER $$
+
+-- Create the Stud_Marks table
+CREATE TABLE Stud_Marks (
+    RollNo INT PRIMARY KEY,      -- Student's Roll number
+    name VARCHAR(50),            -- Student's Name
+    total_marks INT             -- Marks scored by the student
+);
+
+-- Create the Result table
+CREATE TABLE Result (
+    RollNo INT PRIMARY KEY,      -- Student's Roll number
+    Name VARCHAR(50),            -- Student's Name
+    Class VARCHAR(50)            -- Grade or Category of the student
+);
+
+-- Insert records into Stud_Marks table
+INSERT INTO Stud_Marks (RollNo, name, total_marks) VALUES (101, 'John Doe', 1200);
+INSERT INTO Stud_Marks (RollNo, name, total_marks) VALUES (102, 'Jane Smith', 950);
+INSERT INTO Stud_Marks (RollNo, name, total_marks) VALUES (103, 'David Brown', 870);
+INSERT INTO Stud_Marks (RollNo, name, total_marks) VALUES (104, 'Emily Davis', 1500);
+
+-- Insert sample data into Result table
+INSERT INTO Result (RollNo, Name) 
+SELECT RollNo, name FROM Stud_Marks;
+
+-- Create the stored procedure to categorize students
+CREATE PROCEDURE proc_Grade()
+BEGIN
+    -- Update the Result table with the student's grade category based on their marks
+    UPDATE Result
+    JOIN Stud_Marks sm ON Result.RollNo = sm.RollNo
+    SET Result.Class = CASE
+                          WHEN sm.total_marks >= 990 AND sm.total_marks <= 1500 THEN 'Distinction'
+                          WHEN sm.total_marks >= 900 AND sm.total_marks <= 989 THEN 'First Class'
+                          WHEN sm.total_marks >= 825 AND sm.total_marks <= 899 THEN 'Higher Second Class'
+                          ELSE 'No Category'  -- If marks don't match any range
+                        END;
+END $$
+
+DELIMITER ;
+
+-- Call the stored procedure to categorize students
+CALL proc_Grade();

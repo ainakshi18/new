@@ -1,0 +1,27 @@
+CREATE TABLE Dept (
+    deptId INT PRIMARY KEY,
+    deptName VARCHAR(10),
+    deptLoc VARCHAR(10) UNIQUE
+);
+
+CREATE TABLE Emp (
+    empId INT PRIMARY KEY,
+    empName VARCHAR(10) NOT NULL,
+    empSal INT,
+    empDeptId INT,
+    FOREIGN KEY (empDeptId) REFERENCES Dept(deptId)
+);
+
+INSERT INTO Dept (deptId, deptName, deptLoc) VALUES
+(1, 'Sales', 'New York'),
+(2, 'IT', 'Chicago'),
+(3, 'HR', 'Boston');
+
+INSERT INTO Emp (empId, empName, empSal, empDeptId) VALUES
+(101, 'Alice', 5000, 1),
+(102, 'Bob', 4500, 2),
+(103, 'Charlie', 4700, 1),
+(104, 'David', 4800, 3);
+
+
+ALTER TABLE Dept ADD deptLoc VARCHAR(10) UNIQUE;

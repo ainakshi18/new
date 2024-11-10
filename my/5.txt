@@ -1,0 +1,80 @@
+
+CREATE TABLE employee (
+    employee_name VARCHAR(50) PRIMARY KEY,
+    street VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE works (
+    employee_name VARCHAR(50),
+    company_name VARCHAR(50),
+    salary DECIMAL(10, 2),
+    FOREIGN KEY (employee_name) REFERENCES employee(employee_name)
+);
+
+CREATE TABLE company (
+    company_name VARCHAR(50) PRIMARY KEY,
+    city VARCHAR(50)
+);
+
+CREATE TABLE manages (
+    employee_name VARCHAR(50),
+    manager_name VARCHAR(50),
+    FOREIGN KEY (employee_name) REFERENCES employee(employee_name)
+);
+
+
+INSERT INTO employee (employee_name, street, city) VALUES
+('John Doe', '123 Maple St', 'New York'),
+('Jane Smith', '456 Oak St', 'Chicago'),
+('Alice Johnson', '789 Pine St', 'New York'),
+('Bob Brown', '101 Elm St', 'San Francisco'),
+('Carol White', '202 Cedar St', 'Boston');
+
+INSERT INTO works (employee_name, company_name, salary) VALUES
+('John Doe', 'First Bank Corporation', 12000),
+('Jane Smith', 'Tech Solutions', 18000),
+('Alice Johnson', 'First Bank Corporation', 9000),
+('Bob Brown', 'Innovate Labs', 22000),
+('Carol White', 'First Bank Corporation', 15000);
+
+INSERT INTO company (company_name, city) VALUES
+('First Bank Corporation', 'New York'),
+('Tech Solutions', 'Chicago'),
+('Innovate Labs', 'San Francisco'),
+('Global Services', 'Boston'),
+('Green Energy', 'Austin');
+
+INSERT INTO manages (employee_name, manager_name) VALUES
+('John Doe', 'Alice Johnson'),
+('Jane Smith', 'Carol White'),
+('Alice Johnson', 'Bob Brown'),
+('Bob Brown', 'John Doe'),
+('Carol White', 'Alice Johnson');
+
+-- Step 3: Query to Find Names, Street Address, and Cities for Employees of 'First Bank Corporation' with Salary > $10,000
+
+SELECT e.employee_name, e.street, e.city
+FROM employee e
+JOIN works w ON e.employee_name = w.employee_name
+WHERE w.company_name = 'First Bank Corporation' AND w.salary > 10000;
+
+-- Step 4: Query to Find Employees Who Live in the Same City as Their Companies
+
+SELECT e.employee_name
+FROM employee e
+JOIN works w ON e.employee_name = w.employee_name
+JOIN company c ON w.company_name = c.company_name
+WHERE e.city = c.city;
+
+-- Step 5: Query to Find Average Salary of Employees at 'First Bank Corporation'
+
+SELECT AVG(salary) AS average_salary
+FROM works
+WHERE company_name = 'First Bank Corporation';
+
+-- Step 6: Update Query to Give 15% Raise to Employees of 'First Bank Corporation' with Salary < 20,000
+
+UPDATE works
+SET salary = salary * 1.15
+WHERE company_name = 'First Bank Corporation' AND salary < 20000;
